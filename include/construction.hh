@@ -9,6 +9,7 @@
 #include "G4VPhysicalVolume.hh"
 #include "G4VUserDetectorConstruction.hh"
 #include "G4Tubs.hh"
+#include "G4MaterialPropertiesTable.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction{
     

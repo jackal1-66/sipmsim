@@ -14,10 +14,10 @@ void primarygen::GeneratePrimaries(G4Event* anEvent){
     G4ParticleDefinition* particle = particleTable->FindParticle(particleName);
     fParticleGun->SetParticleDefinition(particle);
 
-    G4ThreeVector position = G4ThreeVector(0.,0.,0.);
+    G4ThreeVector position = G4ThreeVector(0.,0.,2*m);
     fParticleGun->SetParticlePosition(position);
 
-    G4ThreeVector momentum = G4ThreeVector(0.,0.,1.);
+    G4ThreeVector momentum = G4ThreeVector(0.,0.,-1.);
     fParticleGun->SetParticleMomentumDirection(momentum);
 
     fParticleGun->SetParticleMomentum(10.*GeV);
