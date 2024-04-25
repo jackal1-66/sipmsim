@@ -12,6 +12,7 @@
 #include "G4MaterialPropertiesTable.hh"
 #include "G4OpticalSurface.hh"
 #include "G4LogicalSkinSurface.hh"
+#include "detector.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction{
     
@@ -20,6 +21,9 @@ class DetectorConstruction : public G4VUserDetectorConstruction{
         ~DetectorConstruction();  
 
         virtual G4VPhysicalVolume* Construct();
+    private:
+        G4LogicalVolume* logicDetector;    
+        virtual void ConstructSDandField();
 };
 
 #endif

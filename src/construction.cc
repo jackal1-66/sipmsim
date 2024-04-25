@@ -45,7 +45,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4Element * C = nist->FindOrBuildElement("C");    
     G4Material* aero_mat = new G4Material("Aerogel", 0.2000*g/cm3, 3);
     aero_mat->AddMaterial(sio2, 62.5*perCent);
-    aero_mat->AddMaterial(h2o, 37.4*perCent);
+    aero_mat->AddMaterial(h2o, 37.4 * perCent);
     aero_mat->AddElement(C, 0.1*perCent);
     G4double aero_rindex[2] = {1.02, 1.02};
     G4MaterialPropertiesTable* aero_mt = new G4MaterialPropertiesTable();
@@ -89,8 +89,27 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
     G4Tubs* mirror = new G4Tubs("mirror", 5 * cm, 18 * cm, 0.1 * mm, 0., 2 * M_PI * rad);
     G4LogicalVolume* logicMirror = new G4LogicalVolume(mirror, aluminum, "Mirror");
-    G4VPhysicalVolume *mirrorPhys = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.31 * m), logicMirror, "mirrorPhys", logicWorld, false, 0, true);
+    G4VPhysicalVolume *mirrorPhys = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.31 * m), logicMirror, "mirrorPhys", gaslogicRadiator, false, 0, true);
     G4LogicalSkinSurface* mirLogicalSurf = new G4LogicalSkinSurface("mirLogicalSurf", logicMirror, mirrorSurface);
 
+    // SiPM
+    G4Material *silicon = nist->FindOrBuildMaterial("G4_Si");
+
+    G4Box* sipm = new G4Box("SiPM", 3 * mm, 3 * mm, 2 * mm);
+    logicDetector = new G4LogicalVolume(sipm, silicon, "logicDetector");
+    for(G4int i = 0; i < 24; i++){
+        for(G4int j = 0; j < 24; j++){
+            if(i>7 && i <16 && j>7 && j<16) continue;
+            else
+                G4VPhysicalVolume *physDetector = new G4PVPlacement(0, G4ThreeVector(-72 * mm + 6 * mm * i, -72 * mm + 6 * mm * j, 0.42 * m), logicDetector, "physDetector", gaslogicRadiator, false, i + j * 100, true);
+        }
+    }
+
     return physWorld;
+}
+
+void DetectorConstruction::ConstructSDandField()
+{
+    Detector *setup = new Detector("Detector");
+    logicDetector->SetSensitiveDetector(setup);
 }
