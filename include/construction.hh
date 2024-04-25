@@ -10,6 +10,8 @@
 #include "G4VUserDetectorConstruction.hh"
 #include "G4Tubs.hh"
 #include "G4MaterialPropertiesTable.hh"
+#include "G4OpticalSurface.hh"
+#include "G4LogicalSkinSurface.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction{
     

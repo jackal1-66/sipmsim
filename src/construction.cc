@@ -15,14 +15,20 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
     //Air
     G4Material* air_mat = nist->FindOrBuildMaterial("G4_AIR");
+    G4double gamma_ch_en[2] = {
+        1 * eV,
+        2 * eV,
+    };
+    //G4double air_rindex[2] = {1.0, 1.0};
+    G4MaterialPropertiesTable *air_mt = new G4MaterialPropertiesTable();
+    //air_mt->AddProperty("RINDEX", gamma_ch_en, air_rindex, 2);
+
+    //air_mat->SetMaterialPropertiesTable(air_mt);
 
     //HexaFluoroethane gas (C2F6)
     G4Material* gas_mat = new G4Material("HexaFluoroethane", 5.734e-3*g/cm3, 2);
     gas_mat->AddElement(nist->FindOrBuildElement("C"), 2);
     gas_mat->AddElement(nist->FindOrBuildElement("F"), 6);
-    G4double gamma_ch_en[2] = {
-        1.239841939 * eV / 0.9, 1.239841939 * eV / 0.2,
-    };
     G4double gas_rindex[2] = {1.0008, 1.0008};
     G4MaterialPropertiesTable* gas_mt = new G4MaterialPropertiesTable();
     gas_mt->AddProperty("RINDEX", gamma_ch_en, gas_rindex, 2);
@@ -47,6 +53,23 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
     aero_mat->SetMaterialPropertiesTable(aero_mt);
 
+    //Mirror material
+    G4Material *aluminum = nist->FindOrBuildMaterial("G4_Al");
+    G4OpticalSurface * mirrorSurface = new G4OpticalSurface("MirrorSurface", glisur, polished, dielectric_dielectric, 1.);
+
+    G4MaterialPropertiesTable* mirrorSurfaceProperty = new G4MaterialPropertiesTable();
+
+    G4double p_mirror[2] = {1 * eV, 2 * eV};
+    G4double refl_mirror[2] = {1., 1.};
+    G4double effi_mirror[2] = {0., 0.};
+    G4double r_mirror[2] = {1.7, 1.7};
+
+    mirrorSurfaceProperty->AddProperty("REFLECTIVITY", p_mirror, refl_mirror, 2);
+    mirrorSurfaceProperty->AddProperty("EFFICIENCY", p_mirror, effi_mirror, 2);
+    mirrorSurfaceProperty->AddProperty("RINDEX", p_mirror, r_mirror, 2);
+
+    mirrorSurface->SetMaterialPropertiesTable(mirrorSurfaceProperty);
+
     // World
     G4Box *solidWorld = new G4Box("World", 2 * m, 2 * m, 2 * m);
     G4LogicalVolume *logicWorld = new G4LogicalVolume(solidWorld, air_mat, "LogicWorld");
@@ -56,11 +79,18 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4Tubs* gasRadiator = new G4Tubs("gasRadiator", 0., 20*cm, 0.6*m, 0., 2*M_PI*rad);
     G4LogicalVolume *gaslogicRadiator = new G4LogicalVolume(gasRadiator, gas_mat, "gasLogicRadiator");
     G4VPhysicalVolume* gasphysRadiator = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), gaslogicRadiator, "gasphysRadiator", logicWorld, false, 0, true);
-
+    
     // Aerogel Radiator
     G4Box *aerogelRadiator = new G4Box("aerogelRadiator", 0.01 * m, 0.01 * m, 0.02 * m);
     G4LogicalVolume *aerologicRadiator = new G4LogicalVolume(aerogelRadiator, aero_mat, "aeroLogicRadiator");
     G4VPhysicalVolume *aerophysRadiator = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.62*m), aerologicRadiator, "aerophysRadiator", logicWorld, false, 0, true);
+
+    // Mirror
+
+    G4Tubs* mirror = new G4Tubs("mirror", 5 * cm, 18 * cm, 0.1 * mm, 0., 2 * M_PI * rad);
+    G4LogicalVolume* logicMirror = new G4LogicalVolume(mirror, aluminum, "Mirror");
+    G4VPhysicalVolume *mirrorPhys = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.31 * m), logicMirror, "mirrorPhys", logicWorld, false, 0, true);
+    G4LogicalSkinSurface* mirLogicalSurf = new G4LogicalSkinSurface("mirLogicalSurf", logicMirror, mirrorSurface);
 
     return physWorld;
 }
