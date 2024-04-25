@@ -12,11 +12,23 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 {
     // Materials
     G4NistManager * nist = G4NistManager::Instance();
-    G4Material * w_mat = nist->FindOrBuildMaterial("G4_AIR");
+
+    //HexaFluoroethane gas (C2F6)
+    G4Element * elC = new G4Element("Carbon",
+                                    "C",
+                                    6,
+                                    12.011*g/mole);
+    G4Element * elF = new G4Element("Fluorine",
+                                    "F",
+                                    9,
+                                    18.998*g/mole);
+    G4Material * gas_mat = new G4Material("HexaFluoroethane", 5.734e-3*g/cm3, 2);
+    gas_mat->AddElement(elC, 2);
+    gas_mat->AddElement(elF, 6);
 
     // World
-    G4Box* solidWorld = new G4Box("World", 1.0*m, 1.0*m, 1.0*m);
-    G4LogicalVolume* logicWorld = new G4LogicalVolume(solidWorld, w_mat, "LogicWorld");
+    G4Tubs* solidWorld = new G4Tubs("World", 0., 20*cm, 1.20*m, 0., 2*M_PI*rad);
+    G4LogicalVolume *logicWorld = new G4LogicalVolume(solidWorld, gas_mat, "LogicWorld");
     G4VPhysicalVolume* physWorld = new G4PVPlacement(0, G4ThreeVector(0.,0.,0.), logicWorld, "physWorld", 0, false, 0, true);
 
     // Target

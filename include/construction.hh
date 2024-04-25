@@ -8,6 +8,7 @@
 #include "G4Box.hh"
 #include "G4VPhysicalVolume.hh"
 #include "G4VUserDetectorConstruction.hh"
+#include "G4Tubs.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction{
     
