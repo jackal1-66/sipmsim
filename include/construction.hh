@@ -13,6 +13,7 @@
 #include "G4OpticalSurface.hh"
 #include "G4LogicalSkinSurface.hh"
 #include "detector.hh"
+#include "G4Sphere.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction{
     

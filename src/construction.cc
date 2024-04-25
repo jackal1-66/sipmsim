@@ -55,7 +55,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
     //Mirror material
     G4Material *aluminum = nist->FindOrBuildMaterial("G4_Al");
-    G4OpticalSurface * mirrorSurface = new G4OpticalSurface("MirrorSurface", glisur, polished, dielectric_dielectric, 1.);
+    G4OpticalSurface * mirrorSurface = new G4OpticalSurface("MirrorSurface", glisur, polished, dielectric_metal, 1.);
 
     G4MaterialPropertiesTable* mirrorSurfaceProperty = new G4MaterialPropertiesTable();
 
@@ -86,12 +86,19 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4VPhysicalVolume *aerophysRadiator = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.62*m), aerologicRadiator, "aerophysRadiator", logicWorld, false, 0, true);
 
     // Mirror
-
-    G4Tubs* mirror = new G4Tubs("mirror", 5 * cm, 18 * cm, 0.1 * mm, 0., 2 * M_PI * rad);
+    
+    G4Tubs* mirror = new G4Tubs("mirror", 2.5 * cm, 18 * cm, 0.1 * mm, 0., 2 * M_PI * rad);
     G4LogicalVolume* logicMirror = new G4LogicalVolume(mirror, aluminum, "Mirror");
-    G4VPhysicalVolume *mirrorPhys = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.31 * m), logicMirror, "mirrorPhys", gaslogicRadiator, false, 0, true);
+    G4VPhysicalVolume *mirrorPhys = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.42 * m), logicMirror, "mirrorPhys", gaslogicRadiator, false, 0, true);
     G4LogicalSkinSurface* mirLogicalSurf = new G4LogicalSkinSurface("mirLogicalSurf", logicMirror, mirrorSurface);
-
+    
+    // Spherical Mirror
+    /*
+    G4Sphere *mirror = new G4Sphere("mirror", 17.999 * cm, 18 * cm, 0, 2*M_PI*rad, M_PI/2, M_PI);
+    G4LogicalVolume *logicMirror = new G4LogicalVolume(mirror, aluminum, "Mirror");
+    G4VPhysicalVolume *mirrorPhys = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.31 * m), logicMirror, "mirrorPhys", gaslogicRadiator, false, 0, true);
+    G4LogicalSkinSurface *mirLogicalSurf = new G4LogicalSkinSurface("mirLogicalSurf", logicMirror, mirrorSurface);
+    */
     // SiPM
     G4Material *silicon = nist->FindOrBuildMaterial("G4_Si");
 
@@ -101,7 +108,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
         for(G4int j = 0; j < 24; j++){
             if(i>7 && i <16 && j>7 && j<16) continue;
             else
-                G4VPhysicalVolume *physDetector = new G4PVPlacement(0, G4ThreeVector(-72 * mm + 6 * mm * i, -72 * mm + 6 * mm * j, 0.42 * m), logicDetector, "physDetector", gaslogicRadiator, false, i + j * 100, true);
+                G4VPhysicalVolume *physDetector = new G4PVPlacement(0, G4ThreeVector(-72 * mm + 6 * mm * i, -72 * mm + 6 * mm * j, 0.59 * m), logicDetector, "physDetector", gaslogicRadiator, false, i + j * 100, true);
         }
     }
 
