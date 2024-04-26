@@ -10,6 +10,10 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
+file(GLOB macros ${PROJECT_SOURCE_DIR}/macros/*.mac)
+
+file(COPY ${macros} DESTINATION ${PROJECT_BINARY_DIR})
+
 add_executable(Sim SiPMSim.cc ${sources} ${headers})
 target_link_libraries(Sim ${Geant4_LIBRARIES})
 
