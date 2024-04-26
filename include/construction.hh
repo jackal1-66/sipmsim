@@ -14,6 +14,7 @@
 #include "G4LogicalSkinSurface.hh"
 #include "detector.hh"
 #include "G4Sphere.hh"
+#include "G4GenericMessenger.hh"
 
 class DetectorConstruction : public G4VUserDetectorConstruction{
     
@@ -25,6 +26,16 @@ class DetectorConstruction : public G4VUserDetectorConstruction{
     private:
         G4LogicalVolume* logicDetector;    
         virtual void ConstructSDandField();
+        G4GenericMessenger* fMessenger;
+        G4double mirrorPosZ;
+        G4Box *solidWorld, *aerogelRadiator, *sipm;
+        G4Tubs *gasRadiator, *mirror;
+        G4LogicalVolume *logicWorld, *gaslogicRadiator, *aerologicRadiator, *logicMirror;
+        G4VPhysicalVolume *physWorld, *gasphysRadiator, *aerophysRadiator, *physDetector, *mirrorPhys;
+        void def_materials();
+        G4Material *air_mat, *gas_mat, *aero_mat, *aluminum, *sio2, *h2o;
+        G4LogicalSkinSurface *mirLogicalSurf;
+        G4OpticalSurface *mirrorSurface;
 };
 
 #endif
