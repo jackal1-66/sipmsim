@@ -11,4 +11,6 @@ action::~action() {
 void action::Build() const {
     primarygen* gen = new primarygen();
     SetUserAction(gen);
+    runaction* run = new runaction();
+    SetUserAction(run);
 }
