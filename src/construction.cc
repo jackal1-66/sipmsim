@@ -17,7 +17,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4Material* air_mat = nist->FindOrBuildMaterial("G4_AIR");
     G4double gamma_ch_en[2] = {
         1 * eV,
-        2 * eV,
+        6.5 * eV,
     };
     //G4double air_rindex[2] = {1.0, 1.0};
     G4MaterialPropertiesTable *air_mt = new G4MaterialPropertiesTable();
@@ -59,7 +59,7 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
 
     G4MaterialPropertiesTable* mirrorSurfaceProperty = new G4MaterialPropertiesTable();
 
-    G4double p_mirror[2] = {1 * eV, 2 * eV};
+    G4double p_mirror[2] = {1 * eV, 6.5 * eV};
     G4double refl_mirror[2] = {1., 1.};
     G4double effi_mirror[2] = {0., 0.};
     G4double r_mirror[2] = {1.7, 1.7};
@@ -99,16 +99,15 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
     G4VPhysicalVolume *mirrorPhys = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.31 * m), logicMirror, "mirrorPhys", gaslogicRadiator, false, 0, true);
     G4LogicalSkinSurface *mirLogicalSurf = new G4LogicalSkinSurface("mirLogicalSurf", logicMirror, mirrorSurface);
     */
-    // SiPM
-    G4Material *silicon = nist->FindOrBuildMaterial("G4_Si");
 
-    G4Box* sipm = new G4Box("SiPM", 3 * mm, 3 * mm, 2 * mm);
-    logicDetector = new G4LogicalVolume(sipm, silicon, "logicDetector");
+    // SiPM
+    G4Box* sipm = new G4Box("SiPM", 1.5 * mm, 1.5 * mm, 1 * mm);
+    logicDetector = new G4LogicalVolume(sipm, air_mat, "logicDetector");
     for(G4int i = 0; i < 24; i++){
         for(G4int j = 0; j < 24; j++){
             if(i>7 && i <16 && j>7 && j<16) continue;
             else
-                G4VPhysicalVolume *physDetector = new G4PVPlacement(0, G4ThreeVector(-72 * mm + 6 * mm * i, -72 * mm + 6 * mm * j, 0.59 * m), logicDetector, "physDetector", gaslogicRadiator, false, i + j * 100, true);
+                G4VPhysicalVolume *physDetector = new G4PVPlacement(0, G4ThreeVector(-69 * mm + 6 * mm * i, -69 * mm + 6 * mm * j, 0.59 * m), logicDetector, "physDetector", gaslogicRadiator, false, i + j * 100, true);
         }
     }
 

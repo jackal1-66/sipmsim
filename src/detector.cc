@@ -32,8 +32,8 @@ G4bool Detector::ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist)
 
     G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
     analysisManager->FillNtupleIColumn(0, evt);
-    analysisManager->FillNtupleIColumn(0, pos[0]);
-    analysisManager->FillNtupleIColumn(0, pos[1]);
-    analysisManager->FillNtupleIColumn(0, pos[2]);
+    analysisManager->FillNtupleDColumn(1, pos[0]);
+    analysisManager->FillNtupleDColumn(2, pos[1]);
+    analysisManager->FillNtupleDColumn(3, pos[2]);
     analysisManager->AddNtupleRow(0);
 }
